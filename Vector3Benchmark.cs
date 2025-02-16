@@ -17,10 +17,19 @@ public class Vector3Benchmark
     private Vector3 _vectorA;
     private Vector3 _vectorB;
 
-    [Benchmark]
+    private Vector4 _vectorC;
+    private Vector4 _vectorD;
+
+    [Benchmark(Baseline = true)]
     public Vector3 Vector3_Multiply()
     {
         return _vectorA * _vectorB;
+    }
+
+    [Benchmark()]
+    public Vector4 Vector4_Multiply()
+    {
+        return _vectorC * _vectorD;
     }
 
 }

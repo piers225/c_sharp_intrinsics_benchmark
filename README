@@ -1,0 +1,86 @@
+https://stackoverflow.com/questions/56388664/what-does-the-intrinsic-attribute-in-c-sharp-do
+
+https://github.com/dotnet/coreclr/pull/13815/files#diff-1c3eb7b700accd52e0ee34ff1cbe94c26ea8d79a1c28cb1b267f22b30ec43b72
+
+export DOTNET_EnableHWIntrinsic=0/blob/34ec4f5f0bf2b67764db8a6413ba9975c41bc35a/src/libraries/System.Private.CoreLib/src/System/Enum.cs
+
+https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Numerics/Vector_1.cs
+
+
+
+https://github.com/dotnet/runtime/blob/main/docs/design/features/hw-intrinsics.md
+
+export DOTNET_EnableHWIntrinsic=1
+
+https://github.com/dotnet/runtime/blob/main/src/coreclr/jit/hwintrinsiclistxarch.h
+
+Vector3 workaround 
+https://github.com/dotnet/runtime/blob/34ec4f5f0bf2b67764db8a6413ba9975c41bc35a/src/coreclr/jit/simdcodegenxarch.cpp#L384
+
+//Rewrite point
+https://github.com/dotnet/runtime/blob/91bbb321494f4c274a5836226dc39105313859d0/src/coreclr/jit/rationalize.cpp#L848
+
+//setup
+
+https://github.com/dotnet/runtime/blob/91bbb321494f4c274a5836226dc39105313859d0/src/coreclr/jit/hwintrinsic.cpp#L12
+
+
+
+
+In .NET, the types `Vector<T>`, `Vector128<T>`, `Vector256<T>`, and `Vector512<T>` are used for vectorized operations that take advantage of SIMD (Single Instruction, Multiple Data) instructions on supported hardware. Here’s a breakdown of each type:
+
+### 1. **`Vector<T>`**
+   - **Description**: A general-purpose vector type, part of the `System.Numerics.Vectors` namespace, that can represent a vector of arbitrary length.
+   - **Length**: The length of a `Vector<T>` is determined at runtime based on the underlying hardware. For example, it could represent a vector of 4, 8, 16, or more elements, depending on the architecture (e.g., 32-bit or 64-bit).
+   - **Usage**: Typically used when you need platform-independent SIMD support, where the exact vector size will be determined dynamically by the hardware.
+   - **Platform-Specific**: The length is hardware-dependent and adjusts based on the SIMD instruction set available (e.g., SSE, AVX).
+   - **Example**:
+     ```csharp
+     Vector<int> v = new Vector<int>(new int[] {1, 2, 3, 4});
+     ```
+
+### 2. **`Vector128<T>`**
+   - **Description**: Represents a 128-bit wide vector, which typically corresponds to an SSE register size (on x86-64 or ARM architectures).
+   - **Length**: Always represents a vector of 128 bits. For example, a `Vector128<int>` would have 4 elements (since `int` is 32 bits).
+   - **Usage**: Used when working specifically with 128-bit SIMD instructions. It's more performant than `Vector<T>` on hardware that supports SSE (or equivalent 128-bit operations).
+   - **Platform-Specific**: Designed for platforms that support SIMD instructions like SSE2 and beyond.
+   - **Example**:
+     ```csharp
+     Vector128<int> v = new Vector128<int>(new int[] {1, 2, 3, 4});
+     ```
+
+### 3. **`Vector256<T>`**
+   - **Description**: Represents a 256-bit wide vector, typically used with AVX (Advanced Vector Extensions) on compatible processors.
+   - **Length**: Always represents a vector of 256 bits. For example, a `Vector256<int>` would have 8 elements (since `int` is 32 bits).
+   - **Usage**: Used when you need to work with AVX or other 256-bit SIMD instruction sets.
+   - **Platform-Specific**: Available on processors with AVX or AVX2 support (on x86-64, for example).
+   - **Example**:
+     ```csharp
+     Vector256<int> v = new Vector256<int>(new int[] {1, 2, 3, 4, 5, 6, 7, 8});
+     ```
+
+### 4. **`Vector512<T>`**
+   - **Description**: Represents a 512-bit wide vector, typically used with AVX-512 (Advanced Vector Extensions 512-bit).
+   - **Length**: Always represents a vector of 512 bits. For example, a `Vector512<int>` would have 16 elements (since `int` is 32 bits).
+   - **Usage**: Used with AVX-512 instructions when you need to process data in 512-bit chunks.
+   - **Platform-Specific**: Available only on processors that support AVX-512, typically high-end Intel CPUs (e.g., Skylake-X, Ice Lake).
+   - **Example**:
+     ```csharp
+     Vector512<int> v = new Vector512<int>(new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+     ```
+
+### Summary of Differences:
+| Type             | Vector Size | Platform Support | SIMD Instruction Set | Example Elements (for `int`) |
+|------------------|-------------|------------------|-----------------------|-----------------------------|
+| **`Vector<T>`**   | Platform-dependent | Hardware-dependent (SSE, AVX, etc.) | Varies | Varies, depending on the hardware (e.g., 4 elements for 128-bit, 8 for 256-bit) |
+| **`Vector128<T>`** | 128 bits    | SSE2, AVX        | SSE, AVX              | 4 elements for `int` (128 bits) |
+| **`Vector256<T>`** | 256 bits    | AVX, AVX2        | AVX                   | 8 elements for `int` (256 bits) |
+| **`Vector512<T>`** | 512 bits    | AVX-512          | AVX-512               | 16 elements for `int` (512 bits) |
+
+### When to Use Each:
+- **`Vector<T>`**: Ideal for cases where you don’t need to worry about the underlying hardware or SIMD instruction sets. The .NET runtime will determine the optimal vector size based on the system.
+- **`Vector128<T>`**: Use when targeting platforms with 128-bit SIMD (e.g., SSE2, AVX on older or mid-tier processors).
+- **`Vector256<T>`**: Use for AVX-capable platforms where you want to take advantage of 256-bit SIMD instructions (common on modern processors).
+- **`Vector512<T>`**: Use only if targeting hardware with AVX-512 support for the highest SIMD throughput.
+
+In general, the higher the bit-width of the vector, the more data you can process in parallel, which often leads to better performance, assuming the hardware and code are optimized for these wider vectors.

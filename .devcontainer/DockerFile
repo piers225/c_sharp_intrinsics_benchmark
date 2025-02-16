@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
+RUN apt-get update
+
+RUN apt-get install -y curl make
+
+WORKDIR /app
+
+RUN dotnet tool install --tool-path /tools dotnet-trace \
+ && dotnet tool install --tool-path /tools dotnet-counters \
+ && dotnet tool install --tool-path /tools dotnet-dump \
+ && dotnet tool install --tool-path /tools dotnet-gcdump

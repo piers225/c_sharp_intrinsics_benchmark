@@ -28,21 +28,15 @@ public class VectorTricksBenchmark
     public int SIMDSum()
     {
         int vectorSize = Vector<int>.Count; 
-        int sum = 0;
 
         int vectorLength = array.Length / vectorSize * vectorSize;  
         Vector<int> sumVector = new Vector<int>(0); 
 
         for (int i = 0; i < vectorLength; i += vectorSize)
         {
-            Vector<int> vector = new Vector<int>(array, i);
-            sumVector += vector; 
+            sumVector += new Vector<int>(array, i); 
         }
-
-        for (int j = 0; j < vectorSize; j++)
-        {
-            sum += sumVector[j];
-        }
-        return sum;
+        
+        return Vector.Sum(sumVector);
     }
 }

@@ -1,5 +1,6 @@
 
 
+using System.Numerics;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 using BenchmarkDotNet.Attributes;
@@ -11,6 +12,24 @@ public static unsafe class CompareHelper
         for (int i = 0; i < x.Length; i++)
         {
             if(x[i] == y[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static bool NotEqualVector(int[] x, int[] y)
+    {
+        int vectorSize = Vector<int>.Count; 
+        int vectorLength = x.Length / vectorSize * vectorSize;   
+
+        for (int i = 0; i < vectorLength; i += vectorSize)
+        {
+            var vectorX = new Vector<int>(x, i); 
+            var vectorY = new Vector<int>(y, i); 
+            Vector<int> result = Vector.Equals(vectorX, vectorY);
+            if (Vector<int>.Zero.Equals(result))
             {
                 return false;
             }
@@ -73,6 +92,9 @@ public class VectorIntrinsicsBenchmark
 
     [Benchmark(Baseline = true)]
     public bool Manual() => CompareHelper.NotEqualManual(x, y);
+
+    [Benchmark()]
+    public bool Vector() => CompareHelper.NotEqualVector(x, y);
 
     [Benchmark()]
     public bool Sse42() => CompareHelper.NotEqualSse42(ref x, ref y);

@@ -26,7 +26,6 @@ public class VectorOperationsBenchmark
     [GlobalSetup]
     public void Setup()
     {
-        // Setup data for manual and SIMD operations
         v1_Manual = new Vector3d(1.0, 2.0, 3.0);
         v2_Manual = new Vector3d(4.0, 5.0, 6.0);
 

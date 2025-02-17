@@ -25,6 +25,12 @@ public class VectorTricksBenchmark
     }
 
     [Benchmark]
+    public int LinqSum()
+    {
+        return array.Sum();
+    }
+
+    [Benchmark]
     public int SIMDSum()
     {
         int vectorSize = Vector<int>.Count; 

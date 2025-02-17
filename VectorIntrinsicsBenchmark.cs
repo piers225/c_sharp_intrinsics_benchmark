@@ -18,7 +18,7 @@ public static unsafe class CompareHelper
         return true;
     }
 
-    public static bool NotEqualSse42(int[] x, int[] y)
+    public static bool NotEqualSse42(ref int[] x, ref int[] y)
     {
         fixed(int* xp = &x[0])
         fixed(int* yp = &y[0])
@@ -37,15 +37,15 @@ public static unsafe class CompareHelper
         return true;
     }
 
-    public static bool NotEqualAvx2(int[] x, int[] y)
+    public static bool NotEqualAvx2(ref int[] x, ref int[] y)
     {
         fixed(int* xp = &x[0])
         fixed(int* yp = &y[0])
         {
             for(int i = 0; i < x.Length; i += 8)
             {
-                Vector256<int> xVector = Avx2.LoadAlignedVector256(xp + i);
-                Vector256<int> yVector = Avx2.LoadAlignedVector256(yp + i);
+                Vector256<int> xVector = Avx2.LoadVector256(xp + i);
+                Vector256<int> yVector = Avx2.LoadVector256(yp + i);
                 Vector256<int> mask = Avx2.CompareEqual(xVector, yVector);
                 if (!Avx2.TestZ(mask, mask))
                 {
@@ -75,9 +75,9 @@ public class VectorIntrinsicsBenchmark
     public bool Manual() => CompareHelper.NotEqualManual(x, y);
 
     [Benchmark()]
-    public bool Sse41() => CompareHelper.NotEqualSse42(x, y);
+    public bool Sse42() => CompareHelper.NotEqualSse42(ref x, ref y);
 
     [Benchmark()]
-    public bool Avx2() => CompareHelper.NotEqualAvx2(x, y);
+    public bool Avx2() => CompareHelper.NotEqualAvx2(ref x, ref y);
 
 }

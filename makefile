@@ -3,12 +3,13 @@ CONFIGURATION ?= Release
 
 # Define the commands for running the specific benchmarks
 VECTOR3_BENCHMARK_CMD = dotnet run -c $(CONFIGURATION) --filter '*Vector3Benchmark*'
-VECTOR_ADD_BENCHMARK_CMD = dotnet run -c $(CONFIGURATION) --filter '*VectorAddBenchmark*'
+VECTOR_OPERATIONS_BENCHMARK_CMD = dotnet run -c $(CONFIGURATION) --filter '*VectorOperationsBenchmark*'
 VECTOR_INTRINSICS_BENCHMARK_CMD = dotnet run -c $(CONFIGURATION) --filter '*VectorIntrinsicsBenchmark*'
+VECTOR_TRICKS_BENCHMARK_CMD = dotnet run -c $(CONFIGURATION) --filter '*VectorTricksBenchmark*'
 
 # Default target (runs all benchmarks)
 .PHONY: all
-all: vector3-benchmark vector-add-benchmark vector-intrinsics-benchmark
+all: vector3-benchmark vector-operations-benchmark vector-intrinsics-benchmark vector-tricks-benchmark
 
 # Run the Vector3Benchmark
 .PHONY: vector3-benchmark
@@ -16,17 +17,23 @@ vector3-benchmark:
 	@echo "Running Vector3Benchmark..."
 	$(VECTOR3_BENCHMARK_CMD)
 
-# Run the VectorAddBenchmark
-.PHONY: vector-add-benchmark
-vector-add-benchmark:
-	@echo "Running VectorAddBenchmark..."
-	$(VECTOR_ADD_BENCHMARK_CMD)
+# Run the VectorOperationsBenchmark
+.PHONY: vector-operations-benchmark
+vector-operations-benchmark:
+	@echo "Running VectorOperationsBenchmark..."
+	$(VECTOR_OPERATIONS_BENCHMARK_CMD)
 
 # Run the VectorIntrinsicsBenchmark
 .PHONY: vector-intrinsics-benchmark
 vector-intrinsics-benchmark:
 	@echo "Running VectorIntrinsicsBenchmark..."
 	$(VECTOR_INTRINSICS_BENCHMARK_CMD)
+
+# Run the VectorTricksBenchmark
+.PHONY: vector-tricks-benchmark
+vector-tricks-benchmark:
+	@echo "Running VectorTricksBenchmark..."
+	$(VECTOR_TRICKS_BENCHMARK_CMD)
 
 # Clean build artifacts (optional)
 .PHONY: clean

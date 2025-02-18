@@ -22,15 +22,16 @@ public class VectorOperationsBenchmark
     private Vector3d v2_Manual;
     private Vector<double> v1_SIMD;
     private Vector<double> v2_SIMD;
+    private static readonly Random random = new Random();
 
     [GlobalSetup]
     public void Setup()
     {
-        v1_Manual = new Vector3d(1.0, 2.0, 3.0);
-        v2_Manual = new Vector3d(4.0, 5.0, 6.0);
+        v1_Manual = new Vector3d(random.NextDouble() * 10.0, random.NextDouble() * 10.0, random.NextDouble() * 10.0);
+        v2_Manual = new Vector3d(random.NextDouble() * 10.0, random.NextDouble() * 10.0, random.NextDouble() * 10.0);
 
-        v1_SIMD = new Vector<double>(new double[] { 1.0, 2.0, 3.0 });
-        v2_SIMD = new Vector<double>(new double[] { 4.0, 5.0, 6.0 });
+        v1_SIMD = new Vector<double>(new double[] { random.NextDouble() * 10.0, random.NextDouble() * 10.0, random.NextDouble() * 10.0, random.NextDouble() * 10.0 });
+        v2_SIMD = new Vector<double>(new double[] { random.NextDouble() * 10.0, random.NextDouble() * 10.0, random.NextDouble() * 10.0, random.NextDouble() * 10.0 });
     }
 
     [Benchmark]

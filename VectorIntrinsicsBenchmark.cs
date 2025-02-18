@@ -43,9 +43,9 @@ public static unsafe class CompareHelper
         fixed(int* yp = &y[0])
         {
             for(int i = 0; i < x.Length; i += 4)
-            {
-                Vector128<int> xVector = Sse2.LoadAlignedVector128(xp + i);
-                Vector128<int> yVector = Sse2.LoadAlignedVector128(yp + i);
+            {   
+                Vector128<int> xVector = Sse2.LoadVector128(xp + i);
+                Vector128<int> yVector = Sse2.LoadVector128(yp + i);
                 Vector128<int> mask = Sse2.CompareEqual(xVector, yVector);
                 if (!Sse42.TestZ(mask, mask))
                 {

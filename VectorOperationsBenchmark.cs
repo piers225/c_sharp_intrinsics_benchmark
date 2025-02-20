@@ -70,21 +70,19 @@ public class VectorOperationsBenchmark
     }
 
     [Benchmark]
-    public double ManualSumEuclideanMagnitude()
+    public Vector3d ManualAbs()
     {
-        return Math.Sqrt(v1_Manual.X * v1_Manual.X + v1_Manual.Y * v1_Manual.Y + v1_Manual.Z * v1_Manual.Z) +
-          Math.Sqrt(v2_Manual.X * v2_Manual.X + v2_Manual.Y * v2_Manual.Y + v2_Manual.Z * v2_Manual.Z) +
-          Math.Sqrt(v3_Manual.X * v3_Manual.X + v3_Manual.Y * v3_Manual.Y + v3_Manual.Z * v3_Manual.Z) +
-          Math.Sqrt(v4_Manual.X * v4_Manual.X + v4_Manual.Y * v4_Manual.Y + v4_Manual.Z * v4_Manual.Z);
+        return new Vector3d(
+            Math.Abs(v1_Manual.X) + Math.Abs(v2_Manual.X) + Math.Abs(v3_Manual.X) + Math.Abs(v4_Manual.X),
+            Math.Abs(v1_Manual.Y) + Math.Abs(v2_Manual.Y) + Math.Abs(v3_Manual.Y) + Math.Abs(v4_Manual.Y),
+            Math.Abs(v1_Manual.Z) + Math.Abs(v2_Manual.Z) + Math.Abs(v3_Manual.Z) + Math.Abs(v4_Manual.Z)
+        );
     }
 
     [Benchmark]
-    public double SIMDSumEuclideanMagnitude()
+    public Vector<double> SIMDAbs()
     {
-        return Math.Sqrt(Vector.Dot(v1_SIMD, v1_SIMD)) + 
-            Math.Sqrt(Vector.Dot(v2_SIMD, v2_SIMD)) + 
-            Math.Sqrt(Vector.Dot(v3_SIMD, v3_SIMD)) + 
-            Math.Sqrt(Vector.Dot(v4_SIMD, v4_SIMD));
+        return Vector.Abs(v1_SIMD) + Vector.Abs(v2_SIMD) + Vector.Abs(v3_SIMD) + Vector.Abs(v4_SIMD);
     }
 
     [Benchmark]

@@ -13,7 +13,7 @@ public class VectorTricksBenchmark
         Array.Fill(array, 2);
     }
 
-    [Benchmark()]
+    [Benchmark]
     public int ManualSum()
     {
         int total = 0;
@@ -46,7 +46,7 @@ public class VectorTricksBenchmark
         return Vector.Sum(sumVector);
     }
 
-    [Benchmark()]
+    [Benchmark]
     public int ManualMin()
     {
         int min = int.MaxValue;
@@ -57,7 +57,7 @@ public class VectorTricksBenchmark
         return min;
     }
 
-    [Benchmark()]
+    [Benchmark]
     public int LinqMin()
     {
         return array.Min();

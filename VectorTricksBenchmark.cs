@@ -4,22 +4,30 @@ using BenchmarkDotNet.Attributes;
 [DisassemblyDiagnoser]
 public class VectorTricksBenchmark
 {
-    int[] array;
+    int[] intArray;
+    short[] shortArray;
+    decimal[] decimalArray;
 
     [GlobalSetup]
     public void Setup()
     {
-        array = new int[100_000];
-        Array.Fill(array, 2);
+        intArray = new int[100_000];
+        Array.Fill(intArray, 2);
+
+        shortArray = new short[100_000];
+        Array.Fill<short>(shortArray, 2);
+
+        decimalArray = new decimal[100_000];
+        Array.Fill(decimalArray, 2);
     }
 
     [Benchmark]
     public int ManualSum()
     {
         int total = 0;
-        for(var i = 0; i < array.Length; i++)
+        for(var i = 0; i < intArray.Length; i++)
         {
-            total += array[i];
+            total += intArray[i];
         }
         return total;
     }
@@ -27,7 +35,7 @@ public class VectorTricksBenchmark
     [Benchmark]
     public int LinqSum()
     {
-        return array.Sum();
+        return intArray.Sum();
     }
 
     [Benchmark]
@@ -35,12 +43,12 @@ public class VectorTricksBenchmark
     {
         int vectorSize = Vector<int>.Count; 
 
-        int vectorLength = array.Length / vectorSize * vectorSize;  
+        int vectorLength = intArray.Length / vectorSize * vectorSize;  
         Vector<int> sumVector = new Vector<int>(0); 
 
         for (int i = 0; i < vectorLength; i += vectorSize)
         {
-            sumVector += new Vector<int>(array, i); 
+            sumVector += new Vector<int>(intArray, i); 
         }
         
         return Vector.Sum(sumVector);
@@ -50,17 +58,11 @@ public class VectorTricksBenchmark
     public int ManualMin()
     {
         int min = int.MaxValue;
-        for(var i = 0; i < array.Length; i++)
+        for(var i = 0; i < intArray.Length; i++)
         {
-            min = array[i] < min ? array[i] : min;
+            min = intArray[i] < min ? intArray[i] : min;
         }
         return min;
-    }
-
-    [Benchmark]
-    public int LinqMin()
-    {
-        return array.Min();
     }
 
     [Benchmark]
@@ -68,14 +70,32 @@ public class VectorTricksBenchmark
     {
         int vectorSize = Vector<int>.Count; 
 
-        int vectorLength = array.Length / vectorSize * vectorSize;  
+        int vectorLength = intArray.Length / vectorSize * vectorSize;  
         Vector<int> minVector = new Vector<int>(0); 
 
         for (int i = 0; i < vectorLength; i += vectorSize)
         {
-            minVector = Vector.Min(minVector, new Vector<int>(array, i)); 
+            minVector = Vector.Min(minVector, new Vector<int>(intArray, i)); 
         }
         
         return Math.Min(Math.Min(Math.Min(minVector[0], minVector[1]), minVector[2]), minVector[3]);
+    }
+
+    [Benchmark]
+    public int LinqIntMin()
+    {
+        return intArray.Min();
+    }
+
+    [Benchmark]
+    public int LinqShortMin()
+    {
+        return shortArray.Min();
+    }
+
+    [Benchmark]
+    public decimal LinqDecimalMin()
+    {
+        return decimalArray.Min();
     }
 }

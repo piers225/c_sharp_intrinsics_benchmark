@@ -1,5 +1,3 @@
-
-
 using System.Numerics;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
@@ -29,7 +27,7 @@ public static unsafe class CompareHelper
             var vectorX = new Vector<int>(x, i); 
             var vectorY = new Vector<int>(y, i); 
             Vector<int> result = Vector.Equals(vectorX, vectorY);
-            if (Vector<int>.Zero.Equals(result))
+            if (!Vector<int>.Zero.Equals(result))
             {
                 return false;
             }

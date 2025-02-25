@@ -1,5 +1,3 @@
-
-
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Runtime.Intrinsics;

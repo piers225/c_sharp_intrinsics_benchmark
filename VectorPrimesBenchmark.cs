@@ -1,6 +1,4 @@
-using System.Linq.Expressions;
 using System.Numerics;
-using System.Runtime.Intrinsics;
 using BenchmarkDotNet.Attributes;
 
 [DisassemblyDiagnoser]
